@@ -150,6 +150,7 @@ class SelectionManager {
           });
           _selectedIndexes.addAll(indexesDraggedBy);
         } else {
+          indexesDraggedBy.remove(index);
           indexesDraggedBy.forEach((element) {
             if (temporaryIndexes.contains(element)) {
               temporaryIndexes.remove(element);
