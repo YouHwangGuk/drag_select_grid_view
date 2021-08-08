@@ -13,6 +13,8 @@ import '../misc/utils.dart';
 /// more didactic, since you can easily link the UI action to it's consequence
 /// regarding selection.
 class SelectionManager {
+  bool _selectPositive = true;
+
   /// The index in which the drag started.
   int get dragStartIndex => _dragStartIndex;
   var _dragStartIndex = -1;
@@ -58,7 +60,15 @@ class SelectionManager {
   /// Adds the [index] to [_selectedIndexes] and allows [updateDrag] calls.
   void startDrag(int index) {
     _dragStartIndex = _dragEndIndex = index;
-    _selectedIndexes.add(index);
+
+    if (_selectedIndexes.contains(index)) {
+      _selectedIndexes.remove(index);
+      _selectPositive = false;
+    } else {
+      _selectedIndexes.add(index);
+      _selectPositive = true;
+    }
+    //_selectedIndexes.add(index);
   }
 
   /// Updates the [_selectedIndexes], adding/removing one or more indexes, based
@@ -99,9 +109,14 @@ class SelectionManager {
   void _updateDragForwardOrBackward(int index) {
     final indexesDraggedBy = intSetFromRange(index, _dragEndIndex);
 
-    void removeIndexesDraggedByExceptTheCurrent() {
-      indexesDraggedBy.remove(index);
-      _selectedIndexes.removeAll(indexesDraggedBy);
+    // ignore: avoid_positional_boolean_parameters
+    void removeIndexesDraggedByExceptTheCurrent(bool positive) {
+      if (positive) {
+        indexesDraggedBy.remove(index);
+        _selectedIndexes.removeAll(indexesDraggedBy);
+      } else {
+        _selectedIndexes.addAll(indexesDraggedBy);
+      }
     }
 
     final isSelectingForward = index > _dragStartIndex;
@@ -110,19 +125,21 @@ class SelectionManager {
     if (isSelectingForward) {
       final isUnselecting = index < _dragEndIndex;
       if (isUnselecting) {
-        removeIndexesDraggedByExceptTheCurrent();
+        removeIndexesDraggedByExceptTheCurrent(_selectPositive);
       } else {
-        _selectedIndexes.addAll(indexesDraggedBy);
+        // _selectedIndexes.addAll(indexesDraggedBy);
+        removeIndexesDraggedByExceptTheCurrent(!_selectPositive);
       }
     } else if (isSelectingBackward) {
       final isUnselecting = index > _dragEndIndex;
       if (isUnselecting) {
-        removeIndexesDraggedByExceptTheCurrent();
+        removeIndexesDraggedByExceptTheCurrent(_selectPositive);
       } else {
-        _selectedIndexes.addAll(indexesDraggedBy);
+        removeIndexesDraggedByExceptTheCurrent(!_selectPositive);
+        // _selectedIndexes.addAll(indexesDraggedBy);
       }
     } else {
-      removeIndexesDraggedByExceptTheCurrent();
+      removeIndexesDraggedByExceptTheCurrent(_selectPositive);
     }
   }
 }
