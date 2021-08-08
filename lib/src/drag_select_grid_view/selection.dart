@@ -122,23 +122,42 @@ class SelectionManager {
         // }
 
         // ignore: avoid_function_literals_in_foreach_calls
-        indexesDraggedBy.forEach((element) {
-          if (temporaryIndexes.contains(element)) {
-            temporaryIndexes.remove(element);
-          } else {
-            _selectedIndexes.remove(element);
-          }
-        });
+        if (_selectPositive) {
+          indexesDraggedBy.forEach((element) {
+            if (temporaryIndexes.contains(element)) {
+              temporaryIndexes.remove(element);
+            } else {
+              _selectedIndexes.remove(element);
+            }
+          });
+        } else {
+          indexesDraggedBy.forEach((element) {
+            if (!_selectedIndexes.contains(element)) {
+              temporaryIndexes.add(element);
+            }
+          });
+          _selectedIndexes.removeAll(indexesDraggedBy);
+        }
 
         // _selectedIndexes.removeAll(indexesDraggedBy);
       } else {
         // ignore: avoid_function_literals_in_foreach_calls
-        indexesDraggedBy.forEach((element) {
-          if (_selectedIndexes.contains(element)) {
-            temporaryIndexes.add(element);
-          }
-        });
-        _selectedIndexes.addAll(indexesDraggedBy);
+        if (_selectPositive) {
+          indexesDraggedBy.forEach((element) {
+            if (_selectedIndexes.contains(element)) {
+              temporaryIndexes.add(element);
+            }
+          });
+          _selectedIndexes.addAll(indexesDraggedBy);
+        } else {
+          indexesDraggedBy.forEach((element) {
+            if (temporaryIndexes.contains(element)) {
+              temporaryIndexes.remove(element);
+            } else {
+              _selectedIndexes.add(element);
+            }
+          });
+        }
       }
     }
 
