@@ -28,6 +28,7 @@ class SelectionManager {
   /// Indexes can be directly selected, with [_selectedIndexes] setter, and
   /// selected by gestures, with [startDrag], [updateDrag], [endDrag] and [tap].
   Set<int> get selectedIndexes => UnmodifiableSetView(_selectedIndexes);
+  Set<int> temporaryIndexes = {};
 
   /// Sets the indexes that are currently selected.
   ///
@@ -96,6 +97,7 @@ class SelectionManager {
 
   /// Finishes the current drag.
   void endDrag() {
+    temporaryIndexes = {};
     _dragStartIndex = -1;
     _dragEndIndex = -1;
   }
@@ -113,8 +115,29 @@ class SelectionManager {
     void removeIndexesDraggedByExceptTheCurrent(bool positive) {
       if (positive) {
         indexesDraggedBy.remove(index);
-        _selectedIndexes.removeAll(indexesDraggedBy);
+        // if (temporaryIndexes.contains(index)) {
+        //   temporaryIndexes.remove(index);
+        // } else {
+
+        // }
+
+        // ignore: avoid_function_literals_in_foreach_calls
+        indexesDraggedBy.forEach((element) {
+          if (temporaryIndexes.contains(element)) {
+            temporaryIndexes.remove(element);
+          } else {
+            _selectedIndexes.remove(element);
+          }
+        });
+
+        // _selectedIndexes.removeAll(indexesDraggedBy);
       } else {
+        // ignore: avoid_function_literals_in_foreach_calls
+        indexesDraggedBy.forEach((element) {
+          if (_selectedIndexes.contains(element)) {
+            temporaryIndexes.add(element);
+          }
+        });
         _selectedIndexes.addAll(indexesDraggedBy);
       }
     }
