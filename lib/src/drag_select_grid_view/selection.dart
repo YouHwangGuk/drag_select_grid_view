@@ -114,7 +114,6 @@ class SelectionManager {
     // ignore: avoid_positional_boolean_parameters
     void removeIndexesDraggedByExceptTheCurrent(bool positive) {
       if (positive) {
-        indexesDraggedBy.remove(index);
         // if (temporaryIndexes.contains(index)) {
         //   temporaryIndexes.remove(index);
         // } else {
@@ -138,7 +137,7 @@ class SelectionManager {
           });
           _selectedIndexes.removeAll(indexesDraggedBy);
         }
-
+        indexesDraggedBy.remove(index);
         // _selectedIndexes.removeAll(indexesDraggedBy);
       } else {
         // ignore: avoid_function_literals_in_foreach_calls
