@@ -122,6 +122,7 @@ class SelectionManager {
 
         // ignore: avoid_function_literals_in_foreach_calls
         if (_selectPositive) {
+          indexesDraggedBy.remove(index);
           indexesDraggedBy.forEach((element) {
             if (temporaryIndexes.contains(element)) {
               temporaryIndexes.remove(element);
@@ -137,7 +138,7 @@ class SelectionManager {
           });
           _selectedIndexes.removeAll(indexesDraggedBy);
         }
-        indexesDraggedBy.remove(index);
+
         // _selectedIndexes.removeAll(indexesDraggedBy);
       } else {
         // ignore: avoid_function_literals_in_foreach_calls
