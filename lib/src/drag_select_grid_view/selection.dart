@@ -51,6 +51,7 @@ class SelectionManager {
   /// Adds the [index] to [_selectedIndexes], or removes it if it's already
   /// there.
   void tap(int index) {
+    print('taped');
     if (_selectedIndexes.contains(index)) {
       _selectedIndexes.remove(index);
     } else {
